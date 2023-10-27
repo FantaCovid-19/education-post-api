@@ -11,6 +11,7 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictNullChecks": false,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "baseUrl": "./src",
@@ -20,8 +21,10 @@
       "@config": ["configs"],
       "@controllers/*": ["controllers/*"],
       "@helpers/*": ["helpers/*"],
+      "@interfaces/*": ["interfaces/*"],
       "@middlewares/*": ["middlewares/*"],
       "@routes/*": ["routes/*"],
+      "@services/*": ["services/*"],
       "@utils/*": ["utils/*"]
     }
   },
