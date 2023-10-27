@@ -1,3 +1,12 @@
+## 1.2.0 (2023-10-27)
+
+- 1.2.0 ([e1a8280](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/e1a8280))
+- feat: ✨ added checks and path handler to the app ([5da5a6c](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/5da5a6c))
+- feat: ✨ added controller, services and post path ([d4c142b](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/d4c142b))
+- feat: 🚧 work in progress ([c53feac](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/c53feac))
+- feat: 🚧 work in progress ([76541ce](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/76541ce))
+- docs: 🔖added changelog ([eeee65b](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/eeee65b))
+
 ## 1.1.0 (2023-10-27)
 
 - chore: ➕ Add a dependency. ([3bd7770](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/3bd7770))
