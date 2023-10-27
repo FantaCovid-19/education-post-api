@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { configs, IConfig } from '@config';
-import { logger } from '@/utils/logger';
+import { logger } from '@utils/logger';
 
 export default class App {
   private app: Application;
@@ -50,6 +50,7 @@ export default class App {
     if (typeof port !== 'string' && typeof port !== 'number') {
       throw new TypeError(`Argument of type ${typeof port} cannot be used as port!`);
     }
+
     return Number(port);
   }
 }
