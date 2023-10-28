@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { configs, IConfig } from '@config';
+import { configs, IAppConfig } from '@config';
 import { logger, stream } from '@utils/logger.util';
 import IndexRouter from '@routes/index.route';
 import errorMiddleware from '@middlewares/error.middleware';
@@ -12,12 +12,17 @@ import errorMiddleware from '@middlewares/error.middleware';
 export default class App {
   private app: Application;
   private port: string | number;
-  private config: IConfig = configs;
-  private indexRouter = new IndexRouter();
+  private config: IAppConfig;
+  private indexRouter: IndexRouter;
+  private errorMiddleware: errorMiddleware;
 
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.config = configs;
+    this.port = this.config.PORT || 3000;
+
+    this.indexRouter = new IndexRouter();
+    this.errorMiddleware = new errorMiddleware();
 
     this.initializeConfigure();
     this.initializeRoutes();
@@ -29,11 +34,15 @@ export default class App {
 
     this.app.listen(port, () => {
       logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.config.nodeEnv} ========`);
+      logger.info(`======= ENV: ${this.config.NODE_ENV} ========`);
       logger.info(`🚀 App listening on the port ${port}`);
-      logger.info(`🔗 API: ${this.config.apiUrl}`);
+      logger.info(`🔗 API: ${this.config.API_URL}`);
       logger.info(`=================================`);
     });
+  }
+
+  public getApp(): Application {
+    return this.app;
   }
 
   private async initializeConfigure(): Promise<void> {
@@ -57,6 +66,6 @@ export default class App {
   }
 
   private initializeErrorHandling(): void {
-    this.app.use(errorMiddleware);
+    this.app.use(this.errorMiddleware.httpExceptionError);
   }
 }
