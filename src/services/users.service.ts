@@ -1,16 +1,25 @@
 import { PrismaClient, User } from '@prisma/client';
 
-import { isEmpty } from '@/utils/isEmpty.util';
+import { isEmpty } from '@utils/isEmpty.util';
 import { HttpException } from '@helpers/httpException.helper';
 import { EncryptHelper } from '@helpers/encrypt.helper';
 
 export default class UsersService {
-  private prismaService = new PrismaClient();
-  private users = this.prismaService.user;
-  private encryptHelper = new EncryptHelper();
+  private prismaService: PrismaClient;
+  private encryptHelper: EncryptHelper;
+  private users: PrismaClient['user'];
+
+  constructor() {
+    this.prismaService = new PrismaClient();
+    this.encryptHelper = new EncryptHelper();
+
+    this.users = this.prismaService.user;
+  }
 
   public async findAllUsers(): Promise<User[]> {
     const getAllUsers: User[] = await this.users.findMany();
+    getAllUsers.forEach((user) => delete user.password);
+
     return getAllUsers;
   }
 
@@ -19,6 +28,7 @@ export default class UsersService {
 
     const findUserById: User = await this.users.findUnique({ where: { id: userId } });
     if (!findUserById) throw new HttpException(409, 'User not found');
+    delete findUserById.password;
 
     return findUserById;
   }
@@ -31,6 +41,7 @@ export default class UsersService {
 
     const hashedPassword = await this.encryptHelper.hashPassword(userData.password, 10);
     const createUser: User = await this.users.create({ data: { ...userData, password: hashedPassword } });
+    delete createUser.password;
 
     return createUser;
   }
@@ -43,6 +54,7 @@ export default class UsersService {
     if (!findUserById) throw new HttpException(409, 'User not found');
 
     const updateUserById: User = await this.users.update({ where: { id: userId }, data: userData });
+    delete updateUserById.password;
 
     return updateUserById;
   }
@@ -54,6 +66,7 @@ export default class UsersService {
     if (!findUserById) throw new HttpException(409, 'User not found');
 
     const deleteUserById: User = await this.users.delete({ where: { id: userId } });
+    delete deleteUserById.password;
 
     return deleteUserById;
   }

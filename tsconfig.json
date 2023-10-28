@@ -25,7 +25,8 @@
       "@middlewares/*": ["middlewares/*"],
       "@routes/*": ["routes/*"],
       "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@validations/*": ["validations/*"]
     }
   },
   "include": ["src", "package.json"],

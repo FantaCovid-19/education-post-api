@@ -4,8 +4,13 @@ import { isEmpty } from '@utils/isEmpty.util';
 import { HttpException } from '@helpers/httpException.helper';
 
 export default class PostsService {
-  private prismaService = new PrismaClient();
-  private posts = this.prismaService.post;
+  private prismaService: PrismaClient;
+  private posts: PrismaClient['post'];
+
+  constructor() {
+    this.prismaService = new PrismaClient();
+    this.posts = this.prismaService.post;
+  }
 
   public async findAllPosts(): Promise<Post[]> {
     const getAllPosts: Post[] = await this.posts.findMany();
