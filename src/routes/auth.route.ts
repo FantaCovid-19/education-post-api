@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
 import AuthController from '@controllers/auth.controller';
+import { validate } from '@helpers/validator.helper';
+import { signInValidationRules, signUpValidationRules } from '@validations/auth.validation';
 
 export default class AuthRoute {
   public router: Router;
@@ -16,8 +18,8 @@ export default class AuthRoute {
   }
 
   private initializeRoutes() {
-    this.router.post('/signUp', this.authController.signUp);
-    this.router.post('/signIn', this.authController.signIn);
+    this.router.post('/signUp', signUpValidationRules(), validate, this.authController.signUp);
+    this.router.post('/signIn', signInValidationRules(), validate, this.authController.signIn);
     this.router.post('/signOut', this.authController.signOut);
   }
 
