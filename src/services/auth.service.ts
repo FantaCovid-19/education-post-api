@@ -4,13 +4,23 @@ import { isEmpty } from '@utils/isEmpty.util';
 import { JwtHelper } from '@helpers/jwt.helper';
 import { EncryptHelper } from '@helpers/encrypt.helper';
 import { HttpException } from '@helpers/httpException.helper';
+import { configs, IAppConfig } from '@config';
 
 export default class AuthService {
-  private prisma: PrismaClient = new PrismaClient();
-  private users = this.prisma.user;
+  private prisma: PrismaClient;
+  private jwtHelper: JwtHelper;
+  private encryptHelper: EncryptHelper;
+  private users: PrismaClient['user'];
+  private config: IAppConfig;
 
-  private jwtHelper: JwtHelper = new JwtHelper();
-  private encryptHelper: EncryptHelper = new EncryptHelper();
+  constructor() {
+    this.prisma = new PrismaClient();
+    this.jwtHelper = new JwtHelper();
+    this.encryptHelper = new EncryptHelper();
+    this.config = configs;
+
+    this.users = this.prisma.user;
+  }
 
   public async signUp(userData: User): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'User data is required');
@@ -18,7 +28,7 @@ export default class AuthService {
     const findUserByEmail: User = await this.users.findUnique({ where: { email: userData.email } });
     if (findUserByEmail) throw new HttpException(409, `Email ${userData.email} already exists`);
 
-    const hashedPassword = await this.encryptHelper.hashPassword(userData.password, 10);
+    const hashedPassword = await this.encryptHelper.hashPassword(userData.password, this.config.SALT_ROUNDS);
     const createUser: User = await this.users.create({ data: { ...userData, password: hashedPassword } });
 
     return createUser;
@@ -33,43 +43,32 @@ export default class AuthService {
     const isPasswordMatching: boolean = await this.encryptHelper.comparePassword(userData.password, findUserByEmail.password);
     if (!isPasswordMatching) throw new HttpException(409, 'Password is incorrect');
 
-    const tokenData = this.generateToken(findUserByEmail);
+    const { accessToken, refreshToken } = await this.generateToken(findUserByEmail);
 
-    return tokenData;
+    return { findUserByEmail, accessToken, refreshToken };
   }
 
   public async signOut(userData: User): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'User data is required');
 
-    const findUserByEmail: User = await this.users.findUnique({ where: { email: userData.email } });
-    if (!findUserByEmail) throw new HttpException(409, `Email ${userData.email} not found`);
+    const findUserByEmail: User = await this.users.findFirst({ where: { id: userData.id } });
+    if (!findUserByEmail) throw new HttpException(409, `User not found`);
 
     return findUserByEmail;
-  }
-
-  public async refreshToken(userData: User): Promise<string> {
-    if (isEmpty(userData)) throw new HttpException(400, 'User data is required');
-
-    const findUserByEmail: User = await this.users.findUnique({ where: { email: userData.email } });
-    if (!findUserByEmail) throw new HttpException(409, `Email ${userData.email} not found`);
-
-    const tokenData = this.jwtHelper.signToken(findUserByEmail, 'test', 3600);
-
-    return tokenData;
   }
 
   public createAccessToken(userData: User) {
     const dataStoredInToken = { id: userData.id };
     const expiresIn: number = 600;
 
-    return { expiresIn, token: this.jwtHelper.signToken(dataStoredInToken, 'test', expiresIn) };
+    return { expiresIn, token: this.jwtHelper.signToken(dataStoredInToken, expiresIn) };
   }
 
   public createRefreshToken(userData: User) {
     const dataStoredInToken = { id: userData.id };
     const expiresIn: number = 3600;
 
-    return { expiresIn, token: this.jwtHelper.signToken(dataStoredInToken, 'test2', expiresIn) };
+    return { expiresIn, token: this.jwtHelper.signToken(dataStoredInToken, expiresIn) };
   }
 
   public async generateToken(userData: User) {
@@ -77,5 +76,21 @@ export default class AuthService {
     const refreshToken = this.createRefreshToken(userData);
 
     return { accessToken, refreshToken };
+  }
+
+  public async getUserByTokenId(userId: number | string): Promise<User> {
+    const findUserById: User = await this.users.findUnique({ where: { id: Number(userId) } });
+    findUserById.password = undefined;
+
+    return findUserById;
+  }
+
+  public getPublicUserData(userData: User) {
+    const publicData = {
+      email: userData.email,
+      role: userData.role
+    };
+
+    return publicData;
   }
 }

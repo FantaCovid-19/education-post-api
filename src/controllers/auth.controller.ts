@@ -4,14 +4,19 @@ import { User } from '@prisma/client';
 import AuthService from '@services/auth.service';
 
 export default class AuthController {
-  private authService: AuthService = new AuthService();
+  private authService: AuthService;
+
+  constructor() {
+    this.authService = new AuthService();
+  }
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: User = req.body;
       const signUpUserData: User = await this.authService.signUp(userData);
+      const publicUserData = this.authService.getPublicUserData(signUpUserData);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      res.status(201).json({ data: publicUserData, message: 'signup' });
     } catch (error) {
       next(error);
     }
@@ -20,9 +25,10 @@ export default class AuthController {
   public signIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: User = req.body;
-      const signInUserData: object = await this.authService.signIn(userData);
+      const { findUserByEmail, accessToken }: any = await this.authService.signIn(userData);
+      const signInUserData = this.authService.getPublicUserData(findUserByEmail);
 
-      res.status(200).json({ data: signInUserData, message: 'signin' });
+      res.status(200).json({ data: { user: signInUserData, accessToken }, message: 'signin' });
     } catch (error) {
       next(error);
     }
