@@ -19,3 +19,7 @@ node_modules/
 
 # Prisma Migrations directories
 prisma/migrations/
+
+# Build directory
+build/
+dist/
