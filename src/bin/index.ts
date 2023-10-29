@@ -1,5 +1,6 @@
 import type { Application } from 'express';
 import express from 'express';
+import session from 'express-session';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -46,11 +47,25 @@ export default class App {
   }
 
   private async initializeConfigure(): Promise<void> {
+    this.app.set('trust proxy', 1);
+
     this.app.use(morgan('dev', { stream }));
     this.app.use(cors()); // { origin: '*', credentials: true}
     this.app.use(helmet());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(
+      session({
+        secret: this.config.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+          httpOnly: true,
+          secure: false,
+          maxAge: 1000 * 60 * 60 * 24 * 7
+        }
+      })
+    );
   }
 
   private initializeRoutes(): void {

@@ -11,6 +11,7 @@ export interface IAppConfig {
   API_URL: string | undefined;
   JWT_SECRET: string | undefined;
   SALT_ROUNDS: string | number;
+  SESSION_SECRET: string | undefined;
 }
 
 class AppConfig {
@@ -45,7 +46,8 @@ const config = new AppConfig({
     return process.env.LOCAL_URL;
   })(),
   JWT_SECRET: process.env.JWT_SECRET,
-  SALT_ROUNDS: process.env.SALT_ROUNDS || 10
+  SALT_ROUNDS: process.env.SALT_ROUNDS || 10,
+  SESSION_SECRET: process.env.SESSION_SECRET
 });
 
 const configs = config.getConfig();
