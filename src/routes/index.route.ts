@@ -17,7 +17,7 @@ export default class IndexRouter {
       const routeName = path.split('src\\routes\\')[1];
       if (routeName === 'index.route.ts') continue;
 
-      const routeImport = (await import(`@routes/${routeName}`)).default;
+      const routeImport = (await import(`@routes/${routeName}`)).default || require(`${path}`).default;
       const routeClass = new routeImport();
 
       this.router.use(routeClass.path, routeClass.getRouter());
