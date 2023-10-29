@@ -1,3 +1,10 @@
+## <small>1.3.2 (2023-10-29)</small>
+
+- fix!: 🔖 release bugs solved update v1.3.2 ([b8020d6](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/b8020d6))
+- fix: 🐛 create or request non-existent requests and validators. ([32dbc39](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/32dbc39))
+- chore: 🎨 change structure const config ([75a8c75](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/75a8c75))
+- docs: 🔖 changed changelog file ([d90b3c1](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/d90b3c1))
+
 ## <small>1.3.1 (2023-10-29)</small>
 
 - fix: 🔒 problems with salt rounds not being generated solved ([4b17c44](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/4b17c44))
