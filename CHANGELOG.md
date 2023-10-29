@@ -1,3 +1,9 @@
+## <small>1.3.1 (2023-10-29)</small>
+
+- fix: 🔒 problems with salt rounds not being generated solved ([4b17c44](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/4b17c44))
+- fix: 🚑 password security problems fixed ([ac5278d](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/ac5278d))
+- docs: 🔖 changed changelog file ([07d23be](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/07d23be))
+
 ## 1.3.0 (2023-10-29)
 
 - feat!: 🔖 release of api security update v1.3.0 ([9a5cf3f](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/9a5cf3f))
