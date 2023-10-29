@@ -34,7 +34,7 @@ class AppConfig {
 }
 
 const production = process.env.NODE_ENV === 'production';
-const configs = new AppConfig({
+const config = new AppConfig({
   NODE_ENV: process.env.NODE_ENV,
   APP_NAME: process.env.APP_NAME || 'app',
   PORT: process.env.PORT || 3000,
@@ -46,6 +46,7 @@ const configs = new AppConfig({
   })(),
   JWT_SECRET: process.env.JWT_SECRET,
   SALT_ROUNDS: process.env.SALT_ROUNDS || 10
-}).getConfig();
+});
 
+const configs = config.getConfig();
 export { configs };
