@@ -1,3 +1,22 @@
+## 1.3.0 (2023-10-29)
+
+- feat!: 🔖 release of api security update v1.3.0 ([9a5cf3f](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/9a5cf3f))
+- docs: 🔖 changed changelog file ([d403c86](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/d403c86))
+- chore: 🙈 update a .gitignore file. ([ca74b9a](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/ca74b9a))
+- feat: ✨ data validation to the api was developed. ([446a860](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/446a860))
+- feat: 🛂 JWT authorization and security middleware was added. ([bc1e483](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/bc1e483))
+- feat: 🛂 security and validation added to the paths ([14d44a5](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/14d44a5))
+- refactor: 🎨 Rewrote the middleware bug to convert it to poo ([891f9fa](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/891f9fa))
+
+## <small>1.2.1 (2023-10-28)</small>
+
+- fix: 🛂 sensitive data relevals were hidden at login ([90f6ffa](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/90f6ffa))
+- chore: ➕ Add a dependency. ([dda1ae2](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/dda1ae2))
+- chore: 🎨 changes of some variables and imports ([bb1d604](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/bb1d604))
+- chore: 🎨 some subtle changes in the code style ([e4a9017](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/e4a9017))
+- refactor: :recycle: complete refactoring of the configuration ([d7de801](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/d7de801))
+- docs: 🔖update changelog ([50c0bf7](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/50c0bf7))
+
 ## 1.2.0 (2023-10-27)
 
 - 1.2.0 ([e1a8280](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/e1a8280))
