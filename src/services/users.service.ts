@@ -39,7 +39,7 @@ export default class UsersService {
     const findUserByEmail: User = await this.users.findUnique({ where: { email: userData.email } });
     if (findUserByEmail) throw new HttpException(409, `Email ${userData.email} already exists`);
 
-    const hashedPassword = await this.encryptHelper.hashPassword(userData.password, 10);
+    const hashedPassword = await this.encryptHelper.hashPassword(userData.password);
     const createUser: User = await this.users.create({ data: { ...userData, password: hashedPassword } });
     delete createUser.password;
 

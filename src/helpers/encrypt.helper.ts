@@ -1,8 +1,16 @@
 import bcrypt from 'bcrypt';
+import { configs, IAppConfig } from '@config';
 
 export class EncryptHelper {
-  public async hashPassword(password: string, salt: number): Promise<string> {
-    return bcrypt.hash(password, salt);
+  private readonly salt: number | string;
+
+  constructor() {
+    const config: IAppConfig = configs;
+    this.salt = config.SALT_ROUNDS;
+  }
+
+  public async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, Number(this.salt));
   }
 
   public async comparePassword(password: string, hashedPassword: string): Promise<boolean> {

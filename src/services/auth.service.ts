@@ -4,20 +4,17 @@ import { isEmpty } from '@utils/isEmpty.util';
 import { JwtHelper } from '@helpers/jwt.helper';
 import { EncryptHelper } from '@helpers/encrypt.helper';
 import { HttpException } from '@helpers/httpException.helper';
-import { configs, IAppConfig } from '@config';
 
 export default class AuthService {
   private prisma: PrismaClient;
   private jwtHelper: JwtHelper;
   private encryptHelper: EncryptHelper;
   private users: PrismaClient['user'];
-  private config: IAppConfig;
 
   constructor() {
     this.prisma = new PrismaClient();
     this.jwtHelper = new JwtHelper();
     this.encryptHelper = new EncryptHelper();
-    this.config = configs;
 
     this.users = this.prisma.user;
   }
@@ -28,7 +25,7 @@ export default class AuthService {
     const findUserByEmail: User = await this.users.findUnique({ where: { email: userData.email } });
     if (findUserByEmail) throw new HttpException(409, `Email ${userData.email} already exists`);
 
-    const hashedPassword = await this.encryptHelper.hashPassword(userData.password, this.config.SALT_ROUNDS);
+    const hashedPassword = await this.encryptHelper.hashPassword(userData.password);
     const createUser: User = await this.users.create({ data: { ...userData, password: hashedPassword } });
 
     return createUser;
