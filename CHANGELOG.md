@@ -1,3 +1,15 @@
+## 1.4.0 (2023-10-29)
+
+- feat: ✨ security update and test ([5943d33](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/5943d33))
+- chore: 💚 It was added to correctly read the files after deployment. ([0cda136](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/0cda136))
+- chore: 🛂 added security session in api ([1f09ce7](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/1f09ce7))
+- docs: 🔖 changed changelog file ([90a47ec](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/90a47ec))
+- docs: 🚧 work in progress ([89d1c62](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/89d1c62))
+- build: 📦 Modified typescript compilation to javascript. ([89c1586](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/89c1586))
+- build: 📦 The execution variables have been changed ([998cd96](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/998cd96))
+- test: 🧪 Testing configuration has been added ([4051028](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/4051028))
+- test: 🧪 Testing of the routes was added and passed. ([5e6815a](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/5e6815a))
+
 ## <small>1.3.2 (2023-10-29)</small>
 
 - fix!: 🔖 release bugs solved update v1.3.2 ([b8020d6](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/b8020d6))
