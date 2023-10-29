@@ -1,20 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["ES2017"],
+    "target": "ES6",
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "baseUrl": "./src",
     "rootDir": "./",
-    "resolveJsonModule": true,
-    "outDir": "dist",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictNullChecks": false,
-    "noImplicitAny": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
       "@www": ["bin"],
@@ -29,6 +31,6 @@
       "@validations/*": ["validations/*"]
     }
   },
-  "include": ["src", "package.json"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
