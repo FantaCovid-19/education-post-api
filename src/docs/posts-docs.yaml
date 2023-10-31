@@ -1,0 +1,361 @@
+tags:
+  - name: Posts
+    description: Posts Api
+
+paths:
+  /api/v1/posts:
+    get:
+      summary: Find all posts
+      tags:
+        - Posts
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: Example Title
+                        published:
+                          type: boolean
+                          example: false
+                        content:
+                          type: string
+                          example: Example Content
+                        authorId:
+                          type: integer
+                          example: 1
+                  message:
+                    type: string
+                    example: findAll
+
+    post:
+      summary: Create new posts
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Posts'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Example Title
+                      published:
+                        type: boolean
+                        example: false
+                      content:
+                        type: string
+                        example: Example Content
+                      authorId:
+                        type: integer
+                        example: 1
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+                    example: Created
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        error:
+                          type: string
+                          example: Error message
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: String
+                    example: Error message
+
+  /api/v1/posts/{id}:
+    get:
+      summary: Get specific post by id
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          description: Post Id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Example Title
+                      published:
+                        type: boolean
+                        example: false
+                      content:
+                        type: string
+                        example: Example Content
+                      authorId:
+                        type: integer
+                        example: 1
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+                    example: findOne
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: String
+                    example: Error message
+
+    put:
+      summary: Update specific post by id
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          description: Post Id
+          required: true
+          type: integer
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Posts'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Example Title
+                      published:
+                        type: boolean
+                        example: false
+                      content:
+                        type: string
+                        example: Example Content
+                      authorId:
+                        type: integer
+                        example: 1
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+                    example: Updated
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        error:
+                          type: string
+                          example: Error message
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: String
+                    example: Error message
+
+    delete:
+      summary: elete specific post by id
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          description: Post Id
+          required: true
+          type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Example Title
+                      published:
+                        type: boolean
+                        example: false
+                      content:
+                        type: string
+                        example: Example Content
+                      authorId:
+                        type: integer
+                        example: 1
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+                    example: Deleted
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: String
+                    example: Error message
+
+components:
+  schemas:
+    Posts:
+      properties:
+        title:
+          type: string
+          example: Example Title
+        published:
+          type: boolean
+          example: false
+        content:
+          type: string
+          example: Example Content
+        authorId:
+          type: integer
+          example: 1

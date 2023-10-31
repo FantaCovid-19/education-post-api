@@ -1,6 +1,7 @@
 import type { Application } from 'express';
 import express from 'express';
 import session from 'express-session';
+import SwaggerUI from 'swagger-ui-express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -9,6 +10,7 @@ import { configs, IAppConfig } from '@config';
 import { logger, stream } from '@utils/logger.util';
 import IndexRouter from '@routes/index.route';
 import errorMiddleware from '@middlewares/error.middleware';
+import SwaggerJSDoc from '@docs/swagger';
 
 export default class App {
   private app: Application;
@@ -70,6 +72,7 @@ export default class App {
 
   private initializeRoutes(): void {
     this.app.use('/api/v1', this.indexRouter.getRouter());
+    this.app.use('/api-docs', SwaggerUI.serve, SwaggerUI.setup(SwaggerJSDoc));
   }
 
   private normalizePort(port: number | string): number {
