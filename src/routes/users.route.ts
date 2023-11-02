@@ -1,28 +1,21 @@
 import { Router } from 'express';
+import { BaseRoute } from '../interfaces/router.interface';
 
-import UsersController from '@controllers/users.controller';
-import AuthMiddleware from '@middlewares/auth.middleware';
-import { validate } from '@helpers/validator.helper';
-import { userCreateValidationRules, userUpateValidationRules, userDeleteValidationRules } from '@validations/users.validation';
+import UsersController from '../controllers/users.controller';
+import AuthMiddleware from '../middlewares/auth.middleware';
+import { validate } from '../helpers/validator.helper';
+import { userCreateValidationRules, userUpateValidationRules, userDeleteValidationRules } from '../validations/users.validation';
 
-export default class UsersRoute {
-  public router: Router;
-  public path: string;
-
-  private usersController: UsersController;
-  private authMiddleware: AuthMiddleware;
+export default class UsersRoute extends BaseRoute {
+  private usersController: UsersController = new UsersController();
+  private authMiddleware: AuthMiddleware = new AuthMiddleware();
 
   constructor() {
-    this.router = Router();
-    this.path = '/users';
-
-    this.usersController = new UsersController();
-    this.authMiddleware = new AuthMiddleware();
-
+    super('/users');
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  initializeRoutes(): void {
     // @ts-expect-error
     this.router.get('/', this.authMiddleware.verifyAdmin, this.usersController.getAllUsers);
     // @ts-expect-error

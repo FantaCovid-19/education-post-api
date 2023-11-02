@@ -1,26 +1,22 @@
 import { Router } from 'express';
+import { BaseRoute } from '../interfaces/router.interface';
 
-import AuthController from '@controllers/auth.controller';
-import { validate } from '@helpers/validator.helper';
-import { signInValidationRules, signUpValidationRules } from '@validations/auth.validation';
+import AuthController from '../controllers/auth.controller';
+import { validate } from '../helpers/validator.helper';
+import { signInValidationRules, signUpValidationRules } from '../validations/auth.validation';
 
-export default class AuthRoute {
-  public router: Router;
-  public path: string;
-  private authController: AuthController;
+export default class AuthRoute extends BaseRoute {
+  private authController: AuthController = new AuthController();
 
   constructor() {
-    this.router = Router();
-    this.path = '/auth';
-    this.authController = new AuthController();
-
+    super('/auth');
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
-    this.router.post('/signUp', signUpValidationRules(), validate, this.authController.signUp);
-    this.router.post('/signIn', signInValidationRules(), validate, this.authController.signIn);
-    this.router.post('/signOut', this.authController.signOut);
+  initializeRoutes(): void {
+    this.router.post('/signup', signUpValidationRules(), validate, this.authController.signUp);
+    this.router.post('/signin', signInValidationRules(), validate, this.authController.signIn);
+    this.router.post('/signout', this.authController.signOut);
   }
 
   public getRouter(): Router {

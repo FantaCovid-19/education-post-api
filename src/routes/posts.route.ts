@@ -1,28 +1,21 @@
 import { Router } from 'express';
+import { BaseRoute } from '../interfaces/router.interface';
 
-import PostsController from '@controllers/posts.controller';
-import AuthMiddleware from '@middlewares/auth.middleware';
-import { validate } from '@helpers/validator.helper';
-import { postCreateValidationRules, postUpateValidationRules, postDeleteValidationRules } from '@validations/posts.validation';
+import PostsController from '../controllers/posts.controller';
+import AuthMiddleware from '../middlewares/auth.middleware';
+import { validate } from '../helpers/validator.helper';
+import { postCreateValidationRules, postUpateValidationRules, postDeleteValidationRules } from '../validations/posts.validation';
 
-export default class PostsRoute {
-  public router: Router;
-  public path: string;
-
-  private postsController: PostsController;
-  private authMiddleware: AuthMiddleware;
+export default class PostsRoute extends BaseRoute {
+  private postsController: PostsController = new PostsController();
+  private authMiddleware: AuthMiddleware = new AuthMiddleware();
 
   constructor() {
-    this.router = Router();
-    this.path = '/posts';
-
-    this.postsController = new PostsController();
-    this.authMiddleware = new AuthMiddleware();
-
+    super('/posts');
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  initializeRoutes(): void {
     this.router.get('/', this.postsController.getAllPosts);
     this.router.get('/:id', this.postsController.getPostById);
     // @ts-expect-error
