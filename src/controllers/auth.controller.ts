@@ -1,14 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 import { User } from '@prisma/client';
 
-import AuthService from '@services/auth.service';
+import AuthService from '../services/auth.service';
 
 export default class AuthController {
-  private authService: AuthService;
-
-  constructor() {
-    this.authService = new AuthService();
-  }
+  private authService: AuthService = new AuthService();
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

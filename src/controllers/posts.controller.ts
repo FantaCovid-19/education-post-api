@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Post } from '@prisma/client';
 
-import PostsService from '@services/posts.service';
+import PostsService from '../services/posts.service';
 
 export default class PostsController {
   private postsService: PostsService = new PostsService();
