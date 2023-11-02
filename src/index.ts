@@ -1,5 +1,5 @@
-import App from '@www';
+import App from './bin';
 
 const app = new App();
 
-app.start();
+app.listen();
