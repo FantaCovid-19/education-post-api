@@ -1,32 +1,37 @@
 import path from 'path';
 import dotnenv from 'dotenv';
-import { logger } from '@utils/logger.util';
 
 dotnenv.config({ path: path.join(process.cwd(), '.env') });
 
 export interface IAppConfig {
+  NODE_ENV: string;
   APP_NAME: string;
   PORT: string | number;
-  NODE_ENV: string | undefined;
   API_URL: string | undefined;
-  JWT_SECRET: string | undefined;
-  SALT_ROUNDS: string | number;
-  SESSION_SECRET: string | undefined;
+  JWT_SECRET: string;
+  SALT_ROUNDS: number;
+  SESSION_SECRET: string;
 }
 
 class AppConfig {
   public config: IAppConfig;
 
-  constructor(configs: IAppConfig) {
-    this.config = this.validateConfig(configs);
+  constructor() {
+    this.config = this.loadConfig();
   }
 
-  private validateConfig(config: IAppConfig): IAppConfig {
-    for (const [key, value] of Object.entries(config)) {
-      if (!value) throw logger.error(`Config ${key} is not defined!`);
-    }
+  private loadConfig(): IAppConfig {
+    const production = process.env.NODE_ENV === 'production';
 
-    return config;
+    return {
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      APP_NAME: process.env.APP_NAME || 'app',
+      PORT: process.env.PORT || 3000,
+      API_URL: production ? process.env.PRODUCTION_URL : process.env.LOCAL_URL || 'http://localhost:3000',
+      JWT_SECRET: process.env.JWT_SECRET || 'secret',
+      SALT_ROUNDS: Number(process.env.SALT_ROUNDS) || 10,
+      SESSION_SECRET: process.env.SESSION_SECRET || 'secret'
+    };
   }
 
   public getConfig(): IAppConfig {
@@ -34,21 +39,5 @@ class AppConfig {
   }
 }
 
-const production = process.env.NODE_ENV === 'production';
-const config = new AppConfig({
-  NODE_ENV: process.env.NODE_ENV,
-  APP_NAME: process.env.APP_NAME || 'app',
-  PORT: process.env.PORT || 3000,
-  API_URL: (() => {
-    if (production) {
-      return process.env.PRODUCTION_URL;
-    }
-    return process.env.LOCAL_URL;
-  })(),
-  JWT_SECRET: process.env.JWT_SECRET,
-  SALT_ROUNDS: process.env.SALT_ROUNDS || 10,
-  SESSION_SECRET: process.env.SESSION_SECRET
-});
-
-const configs = config.getConfig();
-export { configs };
+const config = new AppConfig().getConfig();
+export const { NODE_ENV, APP_NAME, PORT, API_URL, JWT_SECRET, SALT_ROUNDS, SESSION_SECRET } = config;
