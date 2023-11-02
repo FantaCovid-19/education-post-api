@@ -1,15 +1,14 @@
 import request from 'supertest';
-import { PrismaClient } from '@prisma/client';
 
-import App from '@www';
+import App from '../bin';
+import { db } from '../utils/db.util';
 
 const app = new App().getApp();
-const prisma = new PrismaClient();
 
 beforeAll(async () => {
-  await prisma.user.deleteMany();
+  await db.user.deleteMany();
 
-  await prisma.user.create({
+  await db.user.create({
     data: {
       id: 1,
       name: 'User 1',
@@ -20,7 +19,7 @@ beforeAll(async () => {
   });
 });
 
-const tokenTest = process.env.TOKEN_TESTING;
+const tokenTest = process.env.TOKEN_TESTING as string;
 
 describe('GET /api/v1/users', () => {
   test('should respond with a 200 status code', async () => {

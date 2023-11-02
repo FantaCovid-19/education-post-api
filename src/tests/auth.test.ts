@@ -1,17 +1,16 @@
 import request from 'supertest';
-import { PrismaClient } from '@prisma/client';
 
-import App from '@www';
+import App from '../bin';
+import { db } from '../utils/db.util';
 
 const app = new App().getApp();
-const prisma = new PrismaClient();
 
 beforeAll(async () => {
-  await prisma.user.deleteMany();
+  await db.user.deleteMany();
 });
 
 afterAll(async () => {
-  await prisma.user.deleteMany();
+  await db.user.deleteMany();
 });
 
 describe('POST /api/v1/auth/signup', () => {
