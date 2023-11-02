@@ -1,13 +1,7 @@
-export function isEmpty(value: string | number | object): boolean {
-  if (value === null) {
-    return true;
-  } else if (typeof value !== 'number' && value === '') {
-    return true;
-  } else if (typeof value === 'undefined' || value === undefined) {
-    return true;
-  } else if (typeof value !== null && typeof value === 'object' && !Object.keys(value).length) {
-    return true;
-  } else {
-    return false;
-  }
+export function isEmpty(value: string | number | object | null | undefined): boolean {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string' && value.trim() === '') return true;
+  if (typeof value === 'object' && Object.keys(value).length === 0) return true;
+
+  return false;
 }
