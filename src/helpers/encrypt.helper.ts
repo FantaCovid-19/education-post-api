@@ -1,12 +1,11 @@
 import bcrypt from 'bcrypt';
-import { configs, IAppConfig } from '@config';
+import { SALT_ROUNDS } from '../configs';
 
 export class EncryptHelper {
   private readonly salt: number | string;
 
   constructor() {
-    const config: IAppConfig = configs;
-    this.salt = config.SALT_ROUNDS;
+    this.salt = SALT_ROUNDS;
   }
 
   public async hashPassword(password: string): Promise<string> {

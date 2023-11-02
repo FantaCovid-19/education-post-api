@@ -1,22 +1,22 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { configs, IAppConfig } from '@config';
+import jwt, { JwtPayload, Jwt } from 'jsonwebtoken';
+import { JWT_SECRET } from '../configs';
 
 export class JwtHelper {
-  private config: IAppConfig;
+  private secretKey: string;
 
   constructor() {
-    this.config = configs;
+    this.secretKey = JWT_SECRET;
   }
 
   public signToken(data: any, expiresIn: number): string {
-    return jwt.sign(data, this.config.JWT_SECRET, { expiresIn });
+    return jwt.sign(data, this.secretKey, { expiresIn });
   }
 
-  public verifyToken(token: string): string | JwtPayload {
-    return jwt.verify(token, this.config.JWT_SECRET);
+  public verifyToken(token: string): Jwt | string | JwtPayload {
+    return jwt.verify(token, this.secretKey);
   }
 
-  public decodeToken(token: string): string | JwtPayload {
+  public decodeToken(token: string): null | string | JwtPayload {
     return jwt.decode(token);
   }
 }
