@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '@prisma/client';
 
-import AuthService from '@services/auth.service';
-import { JwtHelper } from '@helpers/jwt.helper';
-import { HttpException } from '@helpers/httpException.helper';
+import AuthService from '../services/auth.service';
+import { JwtHelper } from '../helpers/jwt.helper';
+import { HttpException } from '../helpers/httpException.helper';
 
 export interface RequestWithUser extends Request {
   user: User;
@@ -19,7 +19,8 @@ export default class AuthMiddleware {
   }
 
   private getAutorization = (req: Request): string => {
-    return req.header('Authorization').split('Bearer ')[1] ?? '';
+    const { authorization } = req.headers;
+    return authorization!.split('Bearer ')[1];
   };
 
   public verifyUser = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
