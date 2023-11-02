@@ -1,47 +1,75 @@
+import { createLogger, format, transports } from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import winston from 'winston';
-import winstonDaily from 'winston-daily-rotate-file';
 
-const logDir = join(process.cwd(), 'logs');
+import { NODE_ENV } from '../configs';
 
-if (!existsSync(logDir)) {
-  mkdirSync(logDir);
+const logsSaveDir = join(process.cwd(), 'logs');
+
+if (!existsSync(logsSaveDir)) {
+  mkdirSync(logsSaveDir);
 }
 
-const logFormat = winston.format.printf(({ level, message, timestamp }) => `${timestamp} ${level}: ${message}`);
+class LoggerUtils {
+  private logger: any;
 
-const logger = winston.createLogger({
-  format: winston.format.combine(winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), logFormat),
-  transports: [
-    new winstonDaily({
-      level: 'debug',
-      datePattern: 'YYYY-MM-DD',
-      dirname: join(logDir, 'debug'),
-      filename: `%DATE%.log`,
-      maxFiles: 30,
-      json: false,
-      zippedArchive: true
-    }),
-    new winstonDaily({
-      level: 'error',
-      datePattern: 'YYYY-MM-DD',
-      dirname: join(logDir, 'error'),
-      filename: `%DATE%.error.log`,
-      maxFiles: 30,
-      handleExceptions: true,
-      json: false,
-      zippedArchive: true
-    })
-  ]
-});
-
-logger.add(new winston.transports.Console({ format: winston.format.combine(winston.format.splat(), winston.format.colorize()), silent: process.env.NODE_ENV === 'testing' }));
-
-const stream = {
-  write: (message: string) => {
-    logger.info(message.substring(0, message.lastIndexOf('\n')));
+  constructor() {
+    this.logger = createLogger({
+      format: format.combine(
+        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.printf(({ level, message, timestamp }) => `${timestamp} ${level}: ${message}`)
+      ),
+      transports: [
+        new DailyRotateFile({
+          level: 'debug',
+          datePattern: 'YYYY-MM-DD',
+          dirname: join(logsSaveDir, 'debug'),
+          filename: `%DATE%.log`,
+          maxFiles: 30,
+          json: false,
+          zippedArchive: true
+        }),
+        new DailyRotateFile({
+          level: 'error',
+          datePattern: 'YYYY-MM-DD',
+          dirname: join(logsSaveDir, 'error'),
+          filename: `%DATE%.error.log`,
+          maxFiles: 30,
+          handleExceptions: true,
+          json: false,
+          zippedArchive: true
+        }),
+        new transports.Console({ format: format.combine(format.splat(), format.colorize()), silent: NODE_ENV === 'testing' })
+      ]
+    });
   }
-};
 
-export { logger, stream };
+  public info(message: string): void {
+    this.logger.info(message);
+  }
+
+  public debug(message: string): void {
+    this.logger.debug(message);
+  }
+
+  public error(message: string): void {
+    this.logger.error(message);
+  }
+
+  public warn(message: string): void {
+    this.logger.warn(message);
+  }
+
+  public stream() {
+    return {
+      write: (message: string) => {
+        this.logger.info(message.substring(0, message.lastIndexOf('\n')));
+      }
+    };
+  }
+}
+
+const loggerUtils = new LoggerUtils();
+
+export { loggerUtils };
