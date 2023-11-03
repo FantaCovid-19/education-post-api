@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { BaseRoute } from '../interfaces/router.interface';
+import { BaseRoute } from '../interfaces/baseRoute.interface';
 
 import AuthController from '../controllers/auth.controller';
-import { validate } from '../helpers/validator.helper';
+import { validate } from '../middlewares/validator.middleware';
 import { signInValidationRules, signUpValidationRules } from '../validations/auth.validation';
 
 export default class AuthRoute extends BaseRoute {

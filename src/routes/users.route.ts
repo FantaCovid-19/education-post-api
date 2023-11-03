@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { BaseRoute } from '../interfaces/router.interface';
+import { BaseRoute } from '../interfaces/baseRoute.interface';
 
 import UsersController from '../controllers/users.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import { validate } from '../helpers/validator.helper';
+import { validate } from '../middlewares/validator.middleware';
 import { userCreateValidationRules, userUpateValidationRules, userDeleteValidationRules } from '../validations/users.validation';
 
 export default class UsersRoute extends BaseRoute {

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { BaseRoute } from '../interfaces/router.interface';
+import { BaseRoute } from '../interfaces/baseRoute.interface';
 
 import PostsController from '../controllers/posts.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import { validate } from '../helpers/validator.helper';
+import { validate } from '../middlewares/validator.middleware';
 import { postCreateValidationRules, postUpateValidationRules, postDeleteValidationRules } from '../validations/posts.validation';
 
 export default class PostsRoute extends BaseRoute {
