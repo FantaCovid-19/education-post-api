@@ -1,22 +1,13 @@
-import { body, param } from 'express-validator';
+import { validateFieldsParam, validateFieldsString, validateFieldsPassword, validateFieldsEmail } from '../helpers/validationFields.helper';
 
 export const userCreateValidationRules = () => {
-  return [
-    body('name', 'name is required').exists().isString().withMessage('name is input string').isLength({ min: 3 }),
-    body('email', 'email is required').exists().isEmail().withMessage('email not valid').isLength({ min: 3 }),
-    body('password', 'passoword is required').exists().isString().withMessage('password is input string').isLength({ min: 8 }).withMessage('password must be at least 8 chars long')
-  ];
+  return [validateFieldsString('name'), validateFieldsEmail('email'), validateFieldsPassword('password')];
 };
 
 export const userUpateValidationRules = () => {
-  return [
-    param('id', 'id is required').exists().isString().withMessage('id is input string'),
-    body('name', 'name is required').optional().isString().withMessage('name is input string').isLength({ min: 3 }),
-    body('email', 'email is required').optional().isEmail().withMessage('email not valid').isLength({ min: 3 }),
-    body('password', 'passoword is required').optional().isString().withMessage('password is input string').isLength({ min: 8 }).withMessage('password must be at least 8 chars long')
-  ];
+  return [validateFieldsParam('id'), validateFieldsString('name', true), validateFieldsEmail('email', true), validateFieldsPassword('password', true)];
 };
 
 export const userDeleteValidationRules = () => {
-  return [param('id', 'id is required').exists().isString().withMessage('id is input string')];
+  return [validateFieldsParam('id')];
 };

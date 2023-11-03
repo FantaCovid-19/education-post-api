@@ -1,24 +1,13 @@
-import { body, param } from 'express-validator';
+import { validateFieldsParam, validateFieldsString, validateFieldsNumber, validateFieldsBoolean } from '../helpers/validationFields.helper';
 
 export const postCreateValidationRules = () => {
-  return [
-    body('title', 'title is required').exists().isString().withMessage('title is input string').isLength({ min: 3 }),
-    body('published', 'published is required').optional().isBoolean().withMessage('published is input boolean'),
-    body('content', 'content is required').exists().isString().withMessage('content is input string').isLength({ min: 3 }),
-    body('authorId', 'author id is required').exists().isNumeric().withMessage('author is input number')
-  ];
+  return [validateFieldsString('title'), validateFieldsBoolean('published', true), validateFieldsString('content'), validateFieldsNumber('authorId')];
 };
 
 export const postUpateValidationRules = () => {
-  return [
-    param('id', 'id is required').exists().isString().withMessage('id is input string'),
-    body('title', 'title is required').optional().isString().withMessage('title is input string').isLength({ min: 3 }),
-    body('published', 'published is required').optional().isBoolean().withMessage('published is input boolean'),
-    body('content', 'content is required').optional().isString().withMessage('content is input string').isLength({ min: 3 }),
-    body('authorId', 'author is required').optional().isNumeric().withMessage('author is input number')
-  ];
+  return [validateFieldsParam('id'), validateFieldsString('title', true), validateFieldsBoolean('published', true), validateFieldsString('content', true), validateFieldsNumber('authorId', true)];
 };
 
 export const postDeleteValidationRules = () => {
-  return [param('id', 'id is required').exists().isString().withMessage('id is input string')];
+  return [validateFieldsParam('id')];
 };
