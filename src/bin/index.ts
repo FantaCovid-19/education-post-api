@@ -1,28 +1,32 @@
 import express, { Application } from 'express';
-import cors from 'cors';
+import SwaggerUI from 'swagger-ui-express';
+import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import compression from 'compression';
-
-import path from 'path';
-import session from 'express-session';
-import SwaggerUI from 'swagger-ui-express';
+import cors from 'cors';
+import hpp from 'hpp';
 
 import { PORT, NODE_ENV, API_URL, SESSION_SECRET } from '../configs';
 import { loggerUtils } from '../utils/logger.util';
-import { getAllFiles } from '../utils/getFiles.util';
 import { errorMiddleware } from '../middlewares/error.middleware';
-import SwaggerJSDoc from '../docs/swagger';
+import { swaggerJSDoc } from '../docs/swagger';
+import Routes from '../routes';
 
-export default class App {
+declare module 'express-session' {
+  interface SessionData {}
+}
+
+class App {
   private app: Application;
   private env: string;
   private port: string | number;
 
   constructor() {
     this.app = express();
-    this.port = PORT || 3000;
     this.env = NODE_ENV;
+    this.port = PORT;
 
     this.initializeConfigure();
     this.initializeRoutes();
@@ -45,44 +49,37 @@ export default class App {
     return this.app;
   }
 
-  private async initializeConfigure(): Promise<void> {
-    this.app.use(cors());
+  private initializeConfigure(): void {
     this.app.use(helmet());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(compression());
+
+    this.app.use(cors());
+    this.app.options('*', cors());
 
     this.app.set('trust proxy', 1);
     this.app.disable('x-powered-by');
 
     this.app.use(morgan('dev', { stream: loggerUtils.stream() }));
 
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
-
+    this.app.use(hpp());
+    this.app.use(cookieParser());
     this.app.use(
       session({
         secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: true,
-        cookie: {
-          httpOnly: true,
-          secure: false,
-          maxAge: 1000 * 60 * 60 * 24 * 7
-        }
+        cookie: { secure: Boolean(this.env === 'production') }
       })
     );
   }
 
   private async initializeRoutes(): Promise<void> {
-    const routeFiles = await getAllFiles('/routes');
+    const routes = new Routes();
 
-    routeFiles.forEach((file) => {
-      const routeClass = require(path.resolve(__dirname, file)).default;
-      const route = new routeClass();
-
-      this.app.use(`/api/v1${route.path}`, route.getRouter());
-    });
-
-    this.app.use('/api-docs', SwaggerUI.serve, SwaggerUI.setup(SwaggerJSDoc));
+    this.app.use(routes.path, routes.getRouter());
+    this.app.use('/api-docs', SwaggerUI.serve, SwaggerUI.setup(swaggerJSDoc));
   }
 
   private normalizePort(port: number | string): number {
@@ -97,3 +94,5 @@ export default class App {
     this.app.use(errorMiddleware);
   }
 }
+
+export default App;
