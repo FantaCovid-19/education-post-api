@@ -1,3 +1,23 @@
+## 1.6.0 (2023-11-05)
+
+- feat: ✨ Add query parameters and validation for user routes ([ab83267](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/ab83267))
+- feat: ✨ Add query parameters to get all posts API ([45ccd69](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/45ccd69))
+- feat: ✨ Add user property to Express Request ([7145d98](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/7145d98))
+- feat: ✨ enhanced route controller in surveillance process ([d3f362f](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/d3f362f))
+- feat: ✨ improvements in data validators ([1d0cbc8](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/1d0cbc8))
+- feat: ✨ Update version numbers to 1.6.0 ([5c6c787](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/5c6c787))
+- feat: 🎨 Add signout route and middleware for user verification ([73df1be](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/73df1be))
+- feat: 🎨 Added more security to the api and path controller. ([a59d98a](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/a59d98a))
+- feat: 🎨 prism driver enhancements plus file renaming ([ab22a55](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/ab22a55))
+- chore: ➕ Add a dependency. ([6d5c87f](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/6d5c87f))
+- chore: 🎨 renaming of some variables ([4e1669c](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/4e1669c))
+- chore: 🎨Update User and Post models in schema.prisma ([a18241e](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/a18241e))
+- chore: 🚚 rename files ([c06bdd0](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/c06bdd0))
+- chore: 🚚 rename files ([b20370c](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/b20370c))
+- chore: 🚚 renaming of some file variables ([2cadb1b](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/2cadb1b))
+- chore: 🚚 renaming of some file variables ([7a14471](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/7a14471))
+- docs: 🔖 update changelog file ([a1e4e45](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/a1e4e45))
+
 ## 1.5.0 (2023-11-02)
 
 - feat: ✨ A database utility has been created ([6b3ee31](https://github.com/FantaCovid-19/super-duper-octo-journey/commit/6b3ee31))
