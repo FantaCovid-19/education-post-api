@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { BaseRoute } from '../interfaces/baseRoute.interface';
 
 import UsersController from '../controllers/users.controller';
-import AuthMiddleware from '../middlewares/auth.middleware';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { validate } from '../middlewares/validator.middleware';
-import { userCreateValidationRules, userUpateValidationRules, userDeleteValidationRules } from '../validations/users.validation';
+import { userCreateValidationRules, userUpateValidationRules, userDeleteValidationRules, userGetAllValidationRules, userGetByIdValidationRules } from '../validations/users.validation';
 
 export default class UsersRoute extends BaseRoute {
   private usersController: UsersController = new UsersController();
@@ -16,15 +16,10 @@ export default class UsersRoute extends BaseRoute {
   }
 
   initializeRoutes(): void {
-    // @ts-expect-error
-    this.router.get('/', this.authMiddleware.verifyAdmin, this.usersController.getAllUsers);
-    // @ts-expect-error
-    this.router.get('/:id', this.authMiddleware.verifyAdmin, this.usersController.getUserById);
-    // @ts-expect-error
+    this.router.get('/', this.authMiddleware.verifyAdmin, userGetAllValidationRules(), validate, this.usersController.getAllUsers);
+    this.router.get('/:id', this.authMiddleware.verifyAdmin, userGetByIdValidationRules(), validate, this.usersController.getUserById);
     this.router.post('/', this.authMiddleware.verifyAdmin, userCreateValidationRules(), validate, this.usersController.createUser);
-    // @ts-expect-error
     this.router.put('/:id', this.authMiddleware.verifyAdmin, userUpateValidationRules(), validate, this.usersController.updateUser);
-    // @ts-expect-error
     this.router.delete('/:id', this.authMiddleware.verifyAdmin, userDeleteValidationRules(), validate, this.usersController.deleteUser);
   }
 

@@ -1,4 +1,12 @@
-import { validateFieldsParam, validateFieldsString, validateFieldsPassword, validateFieldsEmail } from '../helpers/validationFields.helper';
+import { validateFieldsParam, validateFieldsString, validateFieldsPassword, validateFieldsEmail, validateFieldsQuery } from '../helpers/validationFields.helper';
+
+export const userGetAllValidationRules = () => {
+  return [validateFieldsQuery('page', true), validateFieldsQuery('limit', true)];
+};
+
+export const userGetByIdValidationRules = () => {
+  return [validateFieldsParam('id')];
+};
 
 export const userCreateValidationRules = () => {
   return [validateFieldsString('name'), validateFieldsEmail('email'), validateFieldsPassword('password')];

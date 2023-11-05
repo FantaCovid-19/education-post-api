@@ -1,79 +1,102 @@
-import { db } from '../utils/db.util';
-import { isEmpty } from '../utils/isEmpty.util';
+import { prisma } from '../utils/prisma.util';
 import { HttpException } from '../helpers/httpException.helper';
-import { EncryptHelper } from '../helpers/encrypt.helper';
+import { EncryptHelper } from '../helpers/encryption.helper';
+import { getUserQuery, getAllUsers, User, UserCreate, UserUpdate, UserDelete } from '../interfaces/user.interface';
 
 export default class UsersService {
-  private users = db.user;
-  private encryptHelper: EncryptHelper;
+  private encryptHelper: EncryptHelper = new EncryptHelper();
 
-  constructor() {
-    this.encryptHelper = new EncryptHelper();
+  public async findAllUsers(query: getUserQuery): Promise<getAllUsers> {
+    const { page, limit } = query;
+    const pageSkip = page ? +page : 1;
+    const pageLimit = limit ? +limit : 5;
+    const startIndex = (pageSkip - 1) * pageLimit;
+    const totalCount = await prisma.user.count();
+    const totalPages = Math.ceil(totalCount / pageLimit);
+    const currentPage = pageSkip > totalPages ? totalPages : pageSkip;
+
+    if (pageSkip < 1) throw new HttpException(400, 'Page must be greater than 0');
+    if (pageLimit < 1) throw new HttpException(400, 'Limit must be greater than 0');
+
+    const getAllUsers = await prisma.user.findMany({
+      skip: startIndex,
+      take: pageLimit,
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, name: true, email: true, createdAt: true }
+    });
+
+    const getAllUsersCount = getAllUsers.length;
+    if (!getAllUsers) throw new HttpException(409, 'Users not found');
+    if (getAllUsers.length < 1) throw new HttpException(409, 'Users not found');
+
+    return { getAllUsers, currentPage, getAllUsersCount, totalCount, totalPages };
   }
 
-  public async findAllUsers(): Promise<any[]> {
-    const getAllUsers = await this.users.findMany();
-    getAllUsers.forEach((user: any) => delete user.password);
+  public async findUserById(userId: string): Promise<User> {
+    if (userId) throw new HttpException(400, 'User ID is required');
 
-    return getAllUsers;
-  }
-
-  public async findUserById(userId: number): Promise<any> {
-    if (isEmpty(userId)) throw new HttpException(400, 'User ID is required');
-
-    const findUserById: any = await this.users.findUnique({ where: { id: userId } }).catch(() => {
-      throw new HttpException(409, 'User not found');
+    const findUserById: any = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      }
     });
     if (!findUserById) throw new HttpException(409, 'User not found');
-    delete findUserById.password;
 
     return findUserById;
   }
 
-  public async createUser(userData: any): Promise<any> {
-    if (isEmpty(userData)) throw new HttpException(400, 'User data is required');
+  public async createUser(userData: UserCreate): Promise<User> {
+    if (!userData) throw new HttpException(400, 'User data is required');
 
-    const findUserByEmail = await this.users.findUnique({ where: { email: userData.email } });
+    const findUserByEmail = await prisma.user.findUnique({ where: { email: userData.email } });
     if (findUserByEmail) throw new HttpException(409, `Email ${userData.email} already exists`);
 
-    const hashedPassword = await this.encryptHelper.hashPassword(userData.password);
-    const createUser: any = await this.users.create({ data: { ...userData, password: hashedPassword } }).catch(() => {
-      throw new HttpException(409, 'User not found');
+    const hashedPassword = this.encryptHelper.hashPassword(userData.password);
+    const createUser = await prisma.user.create({
+      data: { ...userData, password: hashedPassword },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      }
     });
-    delete createUser.password;
 
     return createUser;
   }
 
-  public async updateUser(userId: number, userData: any): Promise<any> {
-    if (isEmpty(userId)) throw new HttpException(400, 'User ID is required');
-    if (isEmpty(userData)) throw new HttpException(400, 'User data is required');
+  public async updateUser(userId: string, userData: UserUpdate): Promise<User> {
+    if (!userId) throw new HttpException(400, 'User ID is required');
+    if (!userData) throw new HttpException(400, 'User data is required');
 
-    const findUserById = await this.users.findUnique({ where: { id: userId } }).catch(() => {
-      throw new HttpException(409, 'User not found');
-    });
+    const findUserById = await prisma.user.findUnique({ where: { id: userId } });
     if (!findUserById) throw new HttpException(409, 'User not found');
 
-    const updateUserById: any = await this.users.update({ where: { id: userId }, data: userData }).catch(() => {
-      throw new HttpException(409, 'User not found');
+    const updateUserById = await prisma.user.update({
+      where: { id: userId },
+      data: userData,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      }
     });
-    delete updateUserById.password;
 
     return updateUserById;
   }
 
-  public async deleteUser(userId: number): Promise<any> {
-    if (isEmpty(userId)) throw new HttpException(400, 'User ID is required');
+  public async deleteUser(userId: string): Promise<UserDelete> {
+    if (!userId) throw new HttpException(400, 'User ID is required');
 
-    const findUserById = await this.users.findUnique({ where: { id: userId } }).catch(() => {
-      throw new HttpException(409, 'User not found');
-    });
+    const findUserById = await prisma.user.findUnique({ where: { id: userId } });
     if (!findUserById) throw new HttpException(409, 'User not found');
 
-    const deleteUserById: any = await this.users.delete({ where: { id: userId } }).catch(() => {
-      throw new HttpException(409, 'User not found');
-    });
-    delete deleteUserById.password;
+    const deleteUserById = await prisma.user.delete({ where: { id: userId }, select: { id: true } });
 
     return deleteUserById;
   }
