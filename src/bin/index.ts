@@ -14,6 +14,12 @@ import { errorMiddleware } from '../middlewares/error.middleware';
 import { swaggerJSDoc } from '../docs/swagger';
 import Routes from '../routes';
 
+declare module 'express' {
+  interface Request {
+    user?: any;
+  }
+}
+
 declare module 'express-session' {
   interface SessionData {}
 }
@@ -69,8 +75,8 @@ class App {
       session({
         secret: SESSION_SECRET,
         resave: false,
-        saveUninitialized: true,
-        cookie: { secure: Boolean(this.env === 'production') }
+        saveUninitialized: false,
+        cookie: { sameSite: 'strict', secure: Boolean(this.env === 'production') }
       })
     );
   }
