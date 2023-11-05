@@ -15,7 +15,7 @@ const swaggerDefinition: OAS3Definition = {
       name: 'GNU GPL V3',
       url: 'https://opensource.org/license/gpl-3-0/'
     },
-    version: '1.5.0'
+    version: '1.6.0'
   },
   components: {
     securitySchemes: {
