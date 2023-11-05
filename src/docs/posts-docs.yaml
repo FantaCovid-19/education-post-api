@@ -8,6 +8,17 @@ paths:
       summary: Find all posts
       tags:
         - Posts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: limit
       responses:
         200:
           description: OK

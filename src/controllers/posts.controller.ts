@@ -1,16 +1,22 @@
 import type { Request, Response, NextFunction } from 'express';
-import { Post } from '@prisma/client';
-
 import PostsService from '../services/posts.service';
 
-export default class PostsController {
+class PostsController {
   private postsService: PostsService = new PostsService();
 
   public getAllPosts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const allPostsData: Post[] = await this.postsService.findAllPosts();
+      const query: any = req.query;
+      const { getAllPosts, totalCount, totalPages, currentPage, getAllPostsCount } = await this.postsService.findAllPosts(query);
 
-      res.status(200).json({ data: allPostsData, message: 'findAll' });
+      res.status(200).json({
+        data: getAllPosts,
+        message: 'findAll',
+        currentPage,
+        getAllPostsCount,
+        totalCount,
+        totalPages
+      });
     } catch (error) {
       next(error);
     }
@@ -18,10 +24,13 @@ export default class PostsController {
 
   public getPostById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const postId: number = Number(req.params.id);
-      const findPostData: Post = await this.postsService.findPostById(postId);
+      const { id } = req.params;
+      const findPostData = await this.postsService.findPostById(id);
 
-      res.status(200).json({ data: findPostData, message: 'findOne' });
+      res.status(200).json({
+        data: findPostData,
+        message: 'findOne'
+      });
     } catch (error) {
       next(error);
     }
@@ -29,10 +38,13 @@ export default class PostsController {
 
   public createPost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const postData: Post = req.body;
-      const createPostData: Post = await this.postsService.createPost(postData);
+      const postData = req.body;
+      const createPostData = await this.postsService.createPost(postData);
 
-      res.status(201).json({ data: createPostData, message: 'created' });
+      res.status(201).json({
+        data: createPostData,
+        message: 'created'
+      });
     } catch (error) {
       next(error);
     }
@@ -40,11 +52,14 @@ export default class PostsController {
 
   public updatePost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const postId: number = Number(req.params.id);
-      const postData: Post = req.body;
-      const updatePostData: Post = await this.postsService.updatePost(postId, postData);
+      const { id } = req.params;
+      const postData = req.body;
+      const updatePostData = await this.postsService.updatePost(id, postData);
 
-      res.status(200).json({ data: updatePostData, message: 'updated' });
+      res.status(200).json({
+        data: updatePostData,
+        message: 'updated'
+      });
     } catch (error) {
       next(error);
     }
@@ -52,12 +67,17 @@ export default class PostsController {
 
   public deletePost = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const postId: number = Number(req.params.id);
-      const deletePostData: Post = await this.postsService.deletePost(postId);
+      const { id } = req.params;
+      const deletePostData = await this.postsService.deletePost(id);
 
-      res.status(200).json({ data: deletePostData, message: 'deleted' });
+      res.status(200).json({
+        data: deletePostData,
+        message: 'deleted'
+      });
     } catch (error) {
       next(error);
     }
   };
 }
+
+export default PostsController;
