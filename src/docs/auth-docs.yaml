@@ -136,6 +136,17 @@ paths:
                     type: string
                     example: Error message
 
+  /api/v1/auth/signout:
+    post:
+      summary: Sign Out
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+
 components:
   schemas:
     SignIn:

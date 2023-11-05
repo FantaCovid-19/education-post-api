@@ -1,15 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
-import { User } from '@prisma/client';
 
 import AuthService from '../services/auth.service';
+import { SignUpInput, SignInInput } from '../interfaces/auth.interface';
 
 export default class AuthController {
   private authService: AuthService = new AuthService();
 
   public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const signUpUserData: User = await this.authService.signUp(userData);
+      const userData: SignUpInput = req.body;
+
+      const signUpUserData = await this.authService.signUp(userData);
       const publicUserData = this.authService.getPublicUserData(signUpUserData);
 
       res.status(201).json({ data: publicUserData, message: 'signup' });
@@ -20,11 +21,12 @@ export default class AuthController {
 
   public signIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const { findUserByEmail, accessToken }: any = await this.authService.signIn(userData);
-      const signInUserData = this.authService.getPublicUserData(findUserByEmail);
+      const userData: SignInInput = req.body;
+      const { signInData, accessToken, cookie } = await this.authService.signIn(userData);
+      const publicUserData = this.authService.getPublicUserData(signInData);
 
-      res.status(200).json({ data: { user: signInUserData, accessToken }, message: 'signin' });
+      res.setHeader('Set-Cookie', [cookie]);
+      res.status(200).json({ data: { user: publicUserData, accessToken }, message: 'signin' });
     } catch (error) {
       next(error);
     }
@@ -32,9 +34,10 @@ export default class AuthController {
 
   public signOut = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const signOutUserData: User = await this.authService.signOut(userData);
+      const userData = req.user;
+      const signOutUserData = await this.authService.signOut(userData);
 
+      res.setHeader('Set-Cookie', ['refresh_token=; Max-age=0']);
       res.status(200).json({ data: signOutUserData, message: 'signout' });
     } catch (error) {
       next(error);
