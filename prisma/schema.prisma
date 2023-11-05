@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String?
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String?
+  email        String   @unique
+  password     String
+  role         Role     @default(USER)
+  posts        Post[]
+  refreshToken String?  @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   title     String
   published Boolean  @default(false)
   content   String
   author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
