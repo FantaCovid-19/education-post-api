@@ -1,4 +1,4 @@
-FROM node:21.1-bookworm-slim as common_build_sata
+FROM node:21.6-bookworm-slim as common_build_sata
 
 COPY . /app
 WORKDIR /app
